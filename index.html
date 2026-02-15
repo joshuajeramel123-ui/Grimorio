@@ -441,6 +441,9 @@ cantidad: 1
 };
 }
 }
+guardar();
+actualizarContador();
+}
 
 /*===================Volver al inicio================*/
 
@@ -484,6 +487,7 @@ adminActivo = true;
 localStorage.setItem("adminActivo","true");
 document.getElementById("adminPanel").classList.remove("hidden");
 actualizarMonedas();
+ desbloquearTodas(); //
 buffer="";
 }
 });
