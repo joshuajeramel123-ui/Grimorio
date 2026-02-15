@@ -142,7 +142,30 @@ top:10px;
 right:10px;
 font-size:18px;
 }
-</style>
+  .visor{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.visor img{
+max-width:90%;
+max-height:90%;
+border-radius:15px;
+box-shadow:0 0 60px 20px gold;
+}
+
+.hidden{
+display:none;
+}
+</style>    ////////////////////////////////////////////////////////////////
 </head>
 <body>
 
@@ -405,7 +428,7 @@ div.className="card revealed "+c.rareza;
 div.innerHTML=`
 <div class="card-back">
 <div class="stack">x${c.cantidad}</div>
-<img src="${c.imagen}" class="img-carta"
+<img src="${c.imagen}" class="img-carta" onclick="verCartaGrande('${c.imagen}')">
 onerror="this.src='https://via.placeholder.com/180x220?text=No+Image'">
 <div class="rareza-label">${c.rareza.toUpperCase()}</div>
 </div>
@@ -420,6 +443,17 @@ setTimeout(()=>{
 
 document.getElementById("contador").innerText=
 "Cartas únicas: "+total+" / "+cartas.length;
+}
+function verCartaGrande(src){
+let visor = document.getElementById("visorCarta");
+let img = document.getElementById("imagenGrande");
+
+img.src = src;
+visor.classList.remove("hidden");
+}
+
+function cerrarVisor(){
+document.getElementById("visorCarta").classList.add("hidden");
 }
 
 // 👇 AQUÍ puedes ponerla
@@ -492,6 +526,9 @@ buffer="";
 }
 });
 
-</script>
+</script>src="script.js"></script>
+ <div id="visorCarta" class="visor hidden" onclick="cerrarVisor()">
+    <img id="imagenGrande">
+</div>
 </body>
 </html>
