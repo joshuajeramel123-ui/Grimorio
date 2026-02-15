@@ -165,9 +165,7 @@ max-height:90%;
 border-radius:15px;
 box-shadow:0 0 60px 20px gold;
 }
-
-.hidden{
-display:none;
+  
 }
 </style> 
 </head>
@@ -450,7 +448,7 @@ setTimeout(()=>{
 document.getElementById("contador").innerText=
 "Cartas únicas: "+total+" / "+cartas.length;
 }
-function verCartaGrande(src){
+function verCartaGrande(src){     /*================VerCartaGrande====================*/
 let visor = document.getElementById("visorCarta");
 let img = document.getElementById("imagenGrande");
 
@@ -532,7 +530,7 @@ buffer="";
   
 </script>  
   
- <div id="visorCarta" class="visor hidden" onclick="cerrarVisor()">
+ <div id="visorCarta" class="visor" onclick="cerrarVisor()">
     <img id="imagenGrande">
 </div>
   
