@@ -428,7 +428,9 @@ div.className="card revealed "+c.rareza;
 div.innerHTML=`
 <div class="card-back">
 <div class="stack">x${c.cantidad}</div>
-<img src="${c.imagen}" class="img-carta" onclick="verCartaGrande('${c.imagen}')">
+<img src="${c.imagen}" 
+class="img-carta" 
+onclick="verCartaGrande('${c.imagen}')"
 onerror="this.src='https://via.placeholder.com/180x220?text=No+Image'">
 <div class="rareza-label">${c.rareza.toUpperCase()}</div>
 </div>
@@ -451,11 +453,7 @@ let img = document.getElementById("imagenGrande");
 img.src = src;
 visor.classList.remove("hidden");
 }
-
-function cerrarVisor(){
-document.getElementById("visorCarta").classList.add("hidden");
-}
-
+    
 // 👇 AQUÍ puedes ponerla
 function salirAdmin(){
 adminActivo = false;
@@ -479,9 +477,7 @@ guardar();
 actualizarContador();
 }
 
-/*===================Volver al inicio================*/
-
-function volverInicio(){
+function volverInicio(){   /*====================volver inicio=====================================*/
 document.getElementById("sobre").classList.add("hidden");
 document.getElementById("grimorio").classList.add("hidden");
 document.getElementById("inicio").classList.remove("hidden");
@@ -491,7 +487,7 @@ document.getElementById("inicio").classList.remove("hidden");
    RESET ADMIN
 ========================= */
 
-function reiniciarTodo(){
+function reiniciarTodo(){   /*=================== Reiniciar todo ================*/
 
 let password = prompt("Ingrese contraseña de administrador:");
 
@@ -525,10 +521,12 @@ actualizarMonedas();
 buffer="";
 }
 });
-
+  
+</script>  
+  
  <div id="visorCarta" class="visor hidden" onclick="cerrarVisor()">
     <img id="imagenGrande">
 </div>
-</script src="script.js"></script>
+  
 </body>
 </html>
