@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Grimorio Prohibido Del Mal</title>
+
+<style>
+body{
+margin:0;
+background:#000;
+color:white;
+font-family:serif;
+text-align:center;
+}
+
+h1{
+font-size:55px;
+text-shadow:0 0 25px purple;
+}
+
+button{
+padding:15px 35px;
+font-size:16px;
+background:black;
+border:3px solid magenta;
+color:white;
+cursor:pointer;
+margin:10px;
+transition:0.3s;
+}
+
+button:hover{
+background:magenta;
+color:black;
+box-shadow:0 0 20px magenta;
+}
+
+.container{
+display:flex;
+justify-content:center;
+gap:20px;
+margin-top:40px;
+flex-wrap:wrap;
+}
+
+.card{
+width:180px;
+height:260px;
+border-radius:15px;
+position:relative;
+transform-style:preserve-3d;
+transition:0.3s;
+}
+
+.card-inner{
+position:relative;
+width:100%;
+height:100%;
+transform-style:preserve-3d;
+transition:0.3s;
+}
+
+.card.flipped .card-inner{
+transform:rotateY(180deg);
+}
+
+.card-front{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:15px;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+backface-visibility:hidden;
+font-size:40px;
+}
+
+.card-back{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:15px;
+/* QUITA ESTA LINEA */
+/* transform:rotateY(180deg); */
+background:#222;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+align-items:center;
+backface-visibility:hidden;
+overflow:hidden;
+}
+
+/* SOLO cuando está dentro del sobre */
+.card-inner .card-back{
+transform: rotateY(180deg);
+}
+
+.img-carta{
+width:100%;
+height:85%;
+object-fit:cover;
+}
+
+.rareza-label{
+width:100%;
+padding:5px;
+font-weight:bold;
+background:black;
+}
+
+.card.revealed.normal{ box-shadow:0 0 10px gray; }
+.card.revealed.especial{ box-shadow:0 0 25px cyan; }
+.card.revealed.raro{ box-shadow:0 0 30px blue; }
+.card.revealed.legendaria{ box-shadow:0 0 45px gold; }
+.card.revealed.maestra{ box-shadow:0 0 55px white; }
+.card.revealed.dios{ box-shadow:0 0 70px red; } /* ARREGLADO */
+
+.stack{
+position:absolute;
+top:5px;
+left:5px;
+font-size:12px;
+background:black;
+padding:2px 6px;
+border-radius:5px;
+}
+
+.hidden{ display:none; }
+
+.admin{
+position:fixed;
+bottom:10px;
+right:10px;
+}
+
+.monedas{
+position:fixed;
+top:10px;
+right:10px;
+font-size:18px;
+}
+</style>
+</head>
+<body>
+
+<div class="monedas">
+💰 Monedas: <span id="monedas">0</span>
+</div>
+
+<div id="inicio">
+<h1>📖 GRIMORIO PROHIBIDO 👻</h1>
+<button onclick="abrirSobre()">ABRIR SOBRE (10 💰)</button>
+<button onclick="verGrimorio()">VER GRIMORIO</button>
+<br>
+<button onclick="ganarMonedas()">✨ GANAR MONEDAS</button>
+</div>
+
+<div id="sobre" class="hidden">
+<h1>Abriendo Sobre</h1>
+<div class="container" id="cartasContainer"></div>
+<button onclick="abrirSobre()">ABRIR OTRO SOBRE (10 💰)</button>
+<button onclick="volverInicio()">⬅ Volver</button>
+</div>
+
+<div id="grimorio" class="hidden">
+<h1>GRIMORIO PROHIBIDO</h1>
+<h3 id="contador"></h3>
+<div class="container" id="grimorioContainer"></div>
+<button onclick="volverInicio()">⬅ Volver</button>
+</div>
+
+<div class="admin hidden" id="adminPanel">
+<button onclick="salirAdmin()">🚪 Salir Admin</button>
+<button onclick="reiniciarTodo()">🧹 Reset Datos</button>
+</div>
+
+<script>
+
+ //*======Admin======*/
+
+let grimorio = JSON.parse(localStorage.getItem("grimorio")) || {};
+let monedas = parseInt(localStorage.getItem("monedas")) || 0;
+let adminActivo = localStorage.getItem("adminActivo") === "true";
+
+function guardar(){
+if(!adminActivo){
+localStorage.setItem("monedas", monedas);
+}
+localStorage.setItem("grimorio", JSON.stringify(grimorio));
+actualizarMonedas();
+}
+
+function actualizarMonedas(){
+document.getElementById("monedas").innerText = adminActivo ? "∞" : monedas;
+}
+
+actualizarMonedas();
+if(adminActivo){
+document.getElementById("adminPanel").classList.remove("hidden");
+}
+
+/* =========================
+CARTAS
+========================= */
+const cartas = [
+/*normal*/
+{ rareza:"normal", imagen:"img/911_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/aceite_bebe_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/bro_glen_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/gefe_de_maday_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/jorge_water_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/larios_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/maday_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/nata_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/sleeping_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/tienda_china_normal.jpeg" }, //
+{ rareza:"normal", imagen:"img/clinton_normal.jpeg" },//
+{ rareza:"normal", imagen:"img/glen_hat_normal.jpeg" }, //                 /*13*/
+{ rareza:"normal", imagen:"img/cristo_normal.jpeg" }, //
+
+
+/*especial*/
+{ rareza:"especial", imagen:"img/arabe_especial.jpeg" },//
+{ rareza:"especial", imagen:"img/eucaliptos_especial.jpeg" },//
+{ rareza:"especial", imagen:"img/hawking_especial.jpeg" },//
+{ rareza:"especial", imagen:"img/hillary_especial.jpeg" },//
+{ rareza:"especial", imagen:"img/maduro_especial.jpeg" },//                 /*6*/
+{ rareza:"especial", imagen:"img/obama_especial.jpeg" },//
+
+/*rara*/
+{ rareza:"raro", imagen:"img/isla_rara.jpeg" },//
+{ rareza:"raro", imagen:"img/duo_dinamico_rara.jpeg" },//
+{ rareza:"raro", imagen:"img/la_fortuna_rara.jpeg" },//
+{ rareza:"raro", imagen:"img/marga_euca_rara.jpeg" },//
+{ rareza:"raro", imagen:"img/marla_rara.jpeg" },//
+{ rareza:"raro", imagen:"img/matriz_rara.jpeg" },//
+{ rareza:"raro", imagen:"img/trump_rara.jpeg" },//                            /*9*/
+{ rareza:"raro", imagen:"img/glen_rara.jpeg" },//
+{ rareza:"raro", imagen:"img/arabe_mex_rara.jpeg" },//
+
+/*legendaria*/
+{ rareza:"legendaria", imagen:"img/epstein_legendaria.jpeg" },//
+{ rareza:"legendaria", imagen:"img/67_legendaria.jpeg" },//
+{ rareza:"legendaria", imagen:"img/fat_ass_legendaria.jpeg" },//
+{ rareza:"legendaria", imagen:"img/pdiddy_legendaria.jpeg" },//
+{ rareza:"legendaria", imagen:"img/profe_fisica_legendaria.jpeg" },//
+{ rareza:"legendaria", imagen:"img/trum_clinton_legendaria.jpeg" },//           /*6*/
+
+/*maestra*/
+{ rareza:"maestra", imagen:"img/justin_maestra.jpeg" },//
+{ rareza:"maestra", imagen:"img/manu_maestra.jpeg" },//
+{ rareza:"maestra", imagen:"img/marga_working_maestra.jpeg" },//
+{ rareza:"maestra", imagen:"img/papeles_epstein_maestra.jpeg" },//
+{ rareza:"maestra", imagen:"img/pili_mili_maestra.jpeg" },//                    /*5*/
+
+/* CARTA DIOS */
+{ rareza:"dios", imagen:"img/chávelo_dios.jpeg" },//
+{ rareza:"dios", imagen:"img/chávelo_brazo_izqui_dios.jpeg" },//
+{ rareza:"dios", imagen:"img/chavelo_brazo_derech_dios.jpeg" },//
+{ rareza:"dios", imagen:"img/chávelo_pie_derech_dios.jpeg" },//
+{ rareza:"dios", imagen:"img/chávelo_pie_izqui_dios.jpeg" } //                  /*5*/
+
+];
+
+/* =========================
+RAREZAS
+========================= */
+
+function generarRareza(){
+
+if(adminActivo){
+let r = Math.random();
+if(r < 0.16) return "dios";     // 60% DIOS en admin
+if(r < 0.16) return "maestra";
+if(r < 0.16) return "legendaria";
+if(r < 0.16) return "raro";
+if(r < 0.16) return "especial";
+return "normal";
+}
+
+let r=Math.random();
+
+if(r < 0.0000001) return "dios";   // 0.00001%
+if(r < 0.01) return "maestra";
+if(r < 0.05) return "legendaria";
+if(r < 0.20) return "raro";
+if(r < 0.45) return "especial";
+return "normal";
+}
+
+/*============== Ganar monedas ========*/
+function ganarMonedas(){
+if(adminActivo) return;
+monedas += 1;
+guardar();
+}
+
+/*====================== Abrir sobre =============*/
+function abrirSobre(){
+
+if(!adminActivo){
+if(monedas < 10) return;
+monedas -= 10;
+guardar();
+actualizarContador();
+}
+
+document.getElementById("inicio").classList.add("hidden");
+document.getElementById("grimorio").classList.add("hidden");
+document.getElementById("sobre").classList.remove("hidden");
+
+let container=document.getElementById("cartasContainer");
+container.innerHTML="";
+
+let generadas=[];
+
+for(let i=0;i<5;i++){
+
+let rareza=generarRareza();
+let posibles=cartas.filter(c=>c.rareza===rareza);
+
+if(posibles.length===0){
+posibles=cartas.filter(c=>c.rareza==="normal");
+}
+
+let carta=posibles[Math.floor(Math.random()*posibles.length)];
+
+if(!grimorio[carta.imagen]){
+grimorio[carta.imagen]={...carta,cantidad:1};
+}else{
+grimorio[carta.imagen].cantidad++;
+}
+
+let div=document.createElement("div");
+div.className="card";
+/*=========== Como es la carta por frente, atras ==========*/
+div.innerHTML=`
+<div class="card-inner">
+<div class="card-front">𒅒</div>
+<div class="card-back">
+<img src="${carta.imagen}" class="img-carta"
+onerror="console.error('No se encontró:', this.src); this.src='https://via.placeholder.com/180x220?text=Error'">
+<div class="rareza-label">${carta.rareza.toUpperCase()}</div>
+</div>
+</div>
+`;
+
+container.appendChild(div);
+generadas.push({element:div,rare:carta.rareza});
+}
+
+guardar();
+
+generadas.forEach((carta,index)=>{
+setTimeout(()=>{
+carta.element.classList.add("flipped");
+carta.element.classList.add("revealed");
+carta.element.classList.add(carta.rare);
+},100*(index+1)); // MÁS RÁPIDO
+});
+
+actualizarContador();
+
+}
+
+function actualizarContador(){
+
+let total = 0;
+
+for(let img in grimorio){
+let existe = cartas.some(c => c.imagen === img);
+if(existe) total++;
+}
+
+let contador = document.getElementById("contador");
+if(contador){
+contador.innerText = "Cartas únicas: " + total + " / " + cartas.length;
+}
+}
+
+/*================== Es el grimorio de las cartas ============================*/
+
+function verGrimorio(){
+
+document.getElementById("inicio").classList.add("hidden");
+document.getElementById("sobre").classList.add("hidden");
+document.getElementById("grimorio").classList.remove("hidden");
+
+let container=document.getElementById("grimorioContainer");
+container.innerHTML="";
+
+let total=0;
+
+for(let img in grimorio){
+    // SOLO contar si la carta aún existe en el array actual  //
+let existe = cartas.some(c => c.imagen === img);
+if(!existe) continue;
+
+total++;
+let c=grimorio[img];
+
+let div=document.createElement("div");
+div.className="card revealed "+c.rareza;
+
+div.innerHTML=`
+<div class="card-back">
+<div class="stack">x${c.cantidad}</div>
+<img src="${c.imagen}" class="img-carta"
+onerror="this.src='https://via.placeholder.com/180x220?text=No+Image'">
+<div class="rareza-label">${c.rareza.toUpperCase()}</div>
+</div>
+`;
+
+container.appendChild(div);
+/* Forzar que esté volteada */
+setTimeout(()=>{
+    div.classList.add("flipped");
+},10);
+}
+
+document.getElementById("contador").innerText=
+"Cartas únicas: "+total+" / "+cartas.length;
+}
+
+// 👇 AQUÍ puedes ponerla
+function salirAdmin(){
+adminActivo = false;
+localStorage.setItem("adminActivo","false");
+actualizarMonedas();
+document.getElementById("adminPanel").classList.add("hidden");
+}
+
+/*===================Volver al inicio================*/
+
+function volverInicio(){
+document.getElementById("sobre").classList.add("hidden");
+document.getElementById("grimorio").classList.add("hidden");
+document.getElementById("inicio").classList.remove("hidden");
+}
+
+/* =========================
+   RESET ADMIN
+========================= */
+
+function reiniciarTodo(){
+
+let password = prompt("Ingrese contraseña de administrador:");
+
+if(password === "Adame123"){
+grimorio = {};
+monedas = 0;
+adminActivo = false;
+localStorage.clear();
+location.reload();
+}
+}
+
+/* =========================
+   ACTIVAR ADMIN
+========================= */
+
+let secreto="adameadmin";
+let buffer="";
+
+document.addEventListener("keydown",function(e){
+buffer+=e.key.toLowerCase();
+if(buffer.length>secreto.length){
+buffer=buffer.slice(-secreto.length);
+}
+if(buffer===secreto){
+adminActivo = true;
+localStorage.setItem("adminActivo","true");
+document.getElementById("adminPanel").classList.remove("hidden");
+actualizarMonedas();
+buffer="";
+}
+});
+
+</script>
+</body>
+</html>
