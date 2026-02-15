@@ -274,13 +274,8 @@ RAREZAS
 function generarRareza(){
 
 if(adminActivo){
-let r = Math.random();
-if(r < 0.16) return "dios";     // 60% DIOS en admin
-if(r < 0.16) return "maestra";
-if(r < 0.16) return "legendaria";
-if(r < 0.16) return "raro";
-if(r < 0.16) return "especial";
-return "normal";
+let rarezas = ["dios","maestra","legendaria","raro","especial","normal"];
+return rarezas[Math.floor(Math.random() * rarezas.length)];
 }
 
 let r=Math.random();
@@ -433,6 +428,18 @@ adminActivo = false;
 localStorage.setItem("adminActivo","false");
 actualizarMonedas();
 document.getElementById("adminPanel").classList.add("hidden");
+}
+
+ function desbloquearTodas(){
+for(let carta of cartas){
+
+if(!grimorio[carta.imagen]){
+grimorio[carta.imagen] = {
+imagen: carta.imagen,
+rareza: carta.rareza,
+cantidad: 1
+};
+}
 }
 
 /*===================Volver al inicio================*/
