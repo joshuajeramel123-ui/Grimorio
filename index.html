@@ -436,10 +436,21 @@ guardar();
 
 generadas.forEach((carta,index)=>{
 setTimeout(()=>{
+carta.element.classList.add("carta-epica");
 carta.element.classList.add("flipped");
 carta.element.classList.add("revealed");
 carta.element.classList.add(carta.rare);
-},100*(index+1)); // MÁS RÁPIDO
+
+/* Si sale DIOS, sacude pantalla */
+if(carta.rare === "dios"){
+document.body.classList.add("sacudida");
+
+setTimeout(()=>{
+document.body.classList.remove("sacudida");
+},500);
+}
+
+},200*(index+1));
 });
 
 actualizarContador();
