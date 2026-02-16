@@ -219,6 +219,39 @@ animation: sacudir 0.5s ease;
 }
 
 }  
+/* =========================
+EFECTOS NIVEL DIABLO
+========================= */
+
+@keyframes brilloLegendaria {
+0% { box-shadow:0 0 10px gold; }
+50% { box-shadow:0 0 80px 30px gold; }
+100% { box-shadow:0 0 10px gold; }
+}
+
+@keyframes brilloMaestra {
+0% { box-shadow:0 0 10px white; }
+50% { box-shadow:0 0 90px 40px white; }
+100% { box-shadow:0 0 10px white; }
+}
+
+@keyframes fondoRojoDios {
+0% { background:#000; }
+50% { background:#500; }
+100% { background:#000; }
+}
+
+.legendaria-efecto{
+animation: brilloLegendaria 1s ease;
+}
+
+.maestra-efecto{
+animation: brilloMaestra 1s ease;
+}
+
+.fondo-dios{
+animation: fondoRojoDios 0.6s ease;
+}
 </style> 
 </head>
 <body>
@@ -436,18 +469,46 @@ guardar();
 
 generadas.forEach((carta,index)=>{
 setTimeout(()=>{
-carta.element.classList.add("carta-epica");
+
 carta.element.classList.add("flipped");
 carta.element.classList.add("revealed");
 carta.element.classList.add(carta.rare);
 
-/* Si sale DIOS, sacude pantalla */
+/* =========================
+EFECTOS SEGÚN RAREZA
+========================= */
+
+if(carta.rare === "legendaria"){
+carta.element.classList.add("legendaria-efecto");
+
+setTimeout(()=>{
+carta.element.classList.remove("legendaria-efecto");
+},1000);
+}
+
+if(carta.rare === "maestra"){
+carta.element.classList.add("maestra-efecto");
+
+setTimeout(()=>{
+carta.element.classList.remove("maestra-efecto");
+},1000);
+}
+
 if(carta.rare === "dios"){
+
+/* Sacudida */
 document.body.classList.add("sacudida");
 
 setTimeout(()=>{
 document.body.classList.remove("sacudida");
 },500);
+
+/* Fondo rojo */
+document.body.classList.add("fondo-dios");
+
+setTimeout(()=>{
+document.body.classList.remove("fondo-dios");
+},600);
 }
 
 },200*(index+1));
