@@ -173,6 +173,51 @@ box-shadow:0 0 60px 20px gold;
 
 #grimorio .card {
     transform: none !important;
+/* =========================
+ANIMACIÓN SOBRE ÉPICO
+========================= */
+
+@keyframes aparecerSobre {
+0% { transform: scale(0.5); opacity:0; }
+100% { transform: scale(1); opacity:1; }
+}
+
+@keyframes destelloMagico {
+0% { box-shadow:0 0 0px purple; }
+50% { box-shadow:0 0 80px 20px magenta; }
+100% { box-shadow:0 0 0px purple; }
+}
+
+@keyframes cartaAparece {
+0% { transform: scale(0) rotateY(180deg); opacity:0; }
+100% { transform: scale(1) rotateY(180deg); opacity:1; }
+}
+
+@keyframes sacudir {
+0% { transform: translateX(0); }
+25% { transform: translateX(-10px); }
+50% { transform: translateX(10px); }
+75% { transform: translateX(-10px); }
+100% { transform: translateX(0); }
+}
+
+/* Clase activadora */
+.animar-sobre{
+animation: aparecerSobre 0.5s ease;
+}
+
+.brillo-magico{
+animation: destelloMagico 1s ease;
+}
+
+.carta-epica{
+animation: cartaAparece 0.4s ease forwards;
+}
+
+.sacudida{
+animation: sacudir 0.5s ease;
+}
+
 }  
 </style> 
 </head>
@@ -340,6 +385,12 @@ actualizarContador();
 document.getElementById("inicio").classList.add("hidden");
 document.getElementById("grimorio").classList.add("hidden");
 document.getElementById("sobre").classList.remove("hidden");
+let pantallaSobre = document.getElementById("sobre");
+pantallaSobre.classList.add("animar-sobre");
+
+setTimeout(()=>{
+pantallaSobre.classList.remove("animar-sobre");
+},500);
 
 let container=document.getElementById("cartasContainer");
 container.innerHTML="";
