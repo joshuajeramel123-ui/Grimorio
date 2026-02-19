@@ -21,6 +21,13 @@ h1{
 }
 body{
 margin:0;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+
 background:
 linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
 url("img/fondo_grimorio.jpeg");
@@ -30,7 +37,6 @@ background-repeat: no-repeat;
 background-attachment: fixed;
 
 color:white;
-font-family:serif;
 text-align:center;
 }
 
@@ -59,7 +65,8 @@ box-shadow:0 0 20px magenta;
 .container{
 display:flex;
 justify-content:center;
-gap:20px;
+align-items:flex-start;
+gap:25px;
 margin-top:40px;
 flex-wrap:wrap;
 }
@@ -149,6 +156,14 @@ border-radius:5px;
 }
 
 .hidden{ display:none; }
+
+#inicio{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+min-height:100vh;
+}
 
 .admin{
 position:fixed;
@@ -345,7 +360,6 @@ opacity:0;
 <h1>📖 ᎶᏒᛨᛗᛜᏒᛨᛜ ᚹᏒᛜꖾᛨƂᛨDᛜ 👻</h1>
 <button onclick="abrirSobre()">ꁲꋰꌅꂑꌅ ꌚꂦꋰꌅꈼ (10 💰)</button>
 <button onclick="verGrimorio()"> 💣 𝝯𝝨𝝘 𝗚𝝘𝝞𝝮𝝝𝝘𝝞𝝝 💣</button>
-<br>
 <button onclick="ganarMonedas()">✨ ᎶᚣᚺᚣᏒ ᛗᛜᚺᛊDᚣᛢ</button>
 </div>
 
