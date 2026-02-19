@@ -599,49 +599,65 @@ document.getElementById("inicio").classList.add("hidden");
 document.getElementById("sobre").classList.add("hidden");
 document.getElementById("grimorio").classList.remove("hidden");
 
-let container=document.getElementById("grimorioContainer");
-  let containerDios=document.getElementById("grimorioDios");
-containerDios.innerHTML="";
-container.innerHTML="";
+let container = document.getElementById("grimorioContainer");
+let containerDios = document.getElementById("grimorioDios");
 
-let total=0;
+container.innerHTML = "";
+containerDios.innerHTML = "";
 
-for(let img in grimorio){
-    // SOLO contar si la carta aún existe en el array actual  //
-let existe = cartas.some(c => c.imagen === img);
-if(!existe) continue;
+/* ORDEN DE RAREZA */
+const ordenRareza = {
+    normal: 1,
+    especial: 2,
+    raro: 3,
+    legendaria: 4,
+    maestra: 5,
+    dios: 6
+};
 
-total++;
-let c=grimorio[img];
+/* Convertir grimorio en array */
+let cartasArray = Object.values(grimorio).filter(c =>
+    cartas.some(x => x.imagen === c.imagen)
+);
 
-let div=document.createElement("div");
-div.className="card revealed "+c.rareza;
+/* Ordenar por rareza */
+cartasArray.sort((a, b) =>
+    ordenRareza[a.rareza] - ordenRareza[b.rareza]
+);
 
-div.innerHTML=`
-<div class="card-back">
-<div class="stack">x${c.cantidad}</div>
-<img src="${c.imagen}" 
-class="img-carta" 
-onclick="verCartaGrande('${c.imagen}')"
-onerror="this.src='https://via.placeholder.com/180x220?text=No+Image'">
-<div class="rareza-label">${c.rareza.toUpperCase()}</div>
-</div>
-`;
+let total = 0;
 
-if(c.rareza === "dios"){
-    containerDios.appendChild(div);
-}else{
-    container.appendChild(div);
+cartasArray.forEach(c => {
+
+    total++;
+
+    let div = document.createElement("div");
+    div.className = "card revealed " + c.rareza;
+
+    div.innerHTML = `
+    <div class="card-back">
+        <div class="stack">x${c.cantidad}</div>
+        <img src="${c.imagen}" 
+        class="img-carta" 
+        onclick="verCartaGrande('${c.imagen}')">
+        <div class="rareza-label">${c.rareza.toUpperCase()}</div>
+    </div>
+    `;
+
+    if(c.rareza === "dios"){
+        containerDios.appendChild(div);
+    }else{
+        container.appendChild(div);
+    }
+
+});
+
+document.getElementById("contador").innerText =
+"Cartas únicas: " + total + " / " + cartas.length;
+
 }
-/* Forzar que esté volteada */
-setTimeout(()=>{
-    div.classList.add("flipped");
-},10);
-}
 
-document.getElementById("contador").innerText=
-"Cartas únicas: "+total+" / "+cartas.length;
-}
+  
 function verCartaGrande(src){     /*================VerCartaGrande====================*/
 console.log("CLICK EN CARTA:", src); /*temporal*/
 let visor = document.getElementById("visorCarta");
