@@ -833,14 +833,19 @@ document.addEventListener("mousemove", function(e){
 
 });
 
-/* =========================
-CREADOR DE PARTICULAS
-========================= */
+// ==========================
+// PARTICULAS MAGICAS SEGURAS
+// ==========================
+
+window.addEventListener("load", function(){
+
+const contenedor = document.getElementById("particulas");
+if(!contenedor) return;
 
 function crearParticula(){
 
 const particula = document.createElement("div");
-particula.classList.add("particula");
+particula.className = "particula";
 
 particula.style.left = Math.random() * 100 + "vw";
 
@@ -850,7 +855,7 @@ particula.style.height = size + "px";
 
 particula.style.animationDuration = (Math.random() * 5 + 5) + "s";
 
-document.getElementById("particulas").appendChild(particula);
+contenedor.appendChild(particula);
 
 setTimeout(()=>{
 particula.remove();
@@ -858,7 +863,10 @@ particula.remove();
 
 }
 
-setInterval(crearParticula, 150);
+setInterval(crearParticula, 200);
+
+});
+
 
   
 </script>  
