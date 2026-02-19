@@ -713,40 +713,10 @@ actualizarMonedas();
 buffer="";
 }
 });
-/* =========================
-   MOVIMIENTO 3D MAESTRA
-========================= */
 
 document.addEventListener("mousemove", function(e){
 
-    document.querySelectorAll(".card.maestra.flipped").forEach(card => {
-
-        let rect = card.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        let y = e.clientY - rect.top;
-
-        let inner = card.querySelector(".card-inner");
-
-        if(x > 0 && x < rect.width && y > 0 && y < rect.height){
-
-            let rotateY = ((x / rect.width) - 0.5) * 20;
-            let rotateX = ((y / rect.height) - 0.5) * -20;
-
-            inner.style.transform =
-                `rotateY(${180 + rotateY}deg) rotateX(${rotateX}deg)`;
-
-        }else{
-            inner.style.transform =
-                "rotateY(180deg)";
-        }
-
-    });
-
-});
-
-document.addEventListener("mousemove", function(e){
-
-    document.querySelectorAll("#grimorio .card.maestra.flipped").forEach(card => {
+    document.querySelectorAll("#sobre .card.maestra.flipped").forEach(card => {
 
         let rect = card.getBoundingClientRect();
         let x = e.clientX - rect.left;
@@ -757,11 +727,11 @@ document.addEventListener("mousemove", function(e){
 
         if(x > 0 && x < rect.width && y > 0 && y < rect.height){
 
-            let rotateY = ((x / rect.width) - 0.5) * 20;
-            let rotateX = ((y / rect.height) - 0.5) * -20;
+            let rotateY = ((x / rect.width) - 0.5) * 15;
+            let rotateX = ((y / rect.height) - 0.5) * -15;
 
             inner.style.transform =
-                `rotateY(${180 + rotateY}deg) rotateX(${rotateX}deg)`;
+                `rotateY(180deg) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
         }else{
             inner.style.transform = "rotateY(180deg)";
@@ -770,6 +740,7 @@ document.addEventListener("mousemove", function(e){
     });
 
 });
+
   
 </script>  
   
