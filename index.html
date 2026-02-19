@@ -744,29 +744,27 @@ document.addEventListener("mousemove", function(e){
 
 });
 
-/* =========================
-   MOVIMIENTO 3D MAESTRA
-========================= */
-
 document.addEventListener("mousemove", function(e){
 
-    document.querySelectorAll(".card.maestra").forEach(card => {
+    document.querySelectorAll("#grimorio .card.maestra.flipped").forEach(card => {
 
         let rect = card.getBoundingClientRect();
         let x = e.clientX - rect.left;
         let y = e.clientY - rect.top;
 
+        let inner = card.querySelector(".card-inner");
+        if(!inner) return;
+
         if(x > 0 && x < rect.width && y > 0 && y < rect.height){
 
-            let rotateY = ((x / rect.width) - 0.5) * 30;
-            let rotateX = ((y / rect.height) - 0.5) * -30;
+            let rotateY = ((x / rect.width) - 0.5) * 20;
+            let rotateX = ((y / rect.height) - 0.5) * -20;
 
-            card.querySelector(".card-inner").style.transform =
-                `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+            inner.style.transform =
+                `rotateY(${180 + rotateY}deg) rotateX(${rotateX}deg)`;
 
         }else{
-            card.querySelector(".card-inner").style.transform =
-                "rotateY(0deg) rotateX(0deg)";
+            inner.style.transform = "rotateY(180deg)";
         }
 
     });
