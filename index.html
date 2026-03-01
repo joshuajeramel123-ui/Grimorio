@@ -22,15 +22,19 @@ h1{
 body{
 margin:0;
 font-family: 'Poppins', sans-serif;
+  
 background:
 linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
 url("img/fondo_grimorio.jpeg");
+  
 background-size: cover;
 background-position: center;
 background-repeat: no-repeat;
 background-attachment: fixed;
+  
 color:white;
 text-align:center;
+animation: moverGalaxia 40s linear infinite;
 }
 
 h1{
@@ -137,7 +141,18 @@ background:black;
 .card.revealed.legendaria{ box-shadow:0 0 45px gold; }
 .card.revealed.maestra{ box-shadow:0 0 55px white; }
 .card.revealed.dios{ box-shadow:0 0 70px red; } /* ARREGLADO */
+.card.revealed{
+animation: flotarCarta 6s ease-in-out infinite;
+}
+/* Más rápido para legendaria */
+.card.revealed.legendaria{
+animation: flotarCarta 4s ease-in-out infinite;
+}
 
+/* Más intenso para dios */
+.card.revealed.dios{
+animation: flotarCarta 2.5s ease-in-out infinite;
+}
 .stack{
 position:absolute;
 top:5px;
@@ -221,6 +236,34 @@ ANIMACIÓN SOBRE ÉPICO
 100% { transform: translateX(0); }
 }
 
+@keyframes moverGalaxia {
+0%{
+background-position: 0% 0%;
+}
+25%{
+background-position: 30% 20%;
+}
+50%{
+background-position: 60% 40%;
+}
+75%{
+background-position: 30% 60%;
+}
+100%{
+background-position: 0% 0%;
+}
+}
+
+
+@keyframes flotarCarta {
+0%   { transform: translate(0px, 0px); }
+25%  { transform: translate(2px, -3px); }
+50%  { transform: translate(-2px, 2px); }
+75%  { transform: translate(3px, 1px); }
+100% { transform: translate(0px, 0px); }
+}
+
+  
 /* Clase activadora */
 .animar-sobre{
 animation: aparecerSobre 0.5s ease;
